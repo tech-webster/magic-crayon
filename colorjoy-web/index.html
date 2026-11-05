@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ColorJoy Kids</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-dot" style="background: #ff5c8d"></span>
+        <span class="logo-dot" style="background: #ffc93c"></span>
+        <span class="logo-dot" style="background: #37d67a"></span>
+        <span class="logo-dot" style="background: #4dabf7"></span>
+        <h1>ColorJoy <small>Kids</small></h1>
+      </div>
+      <button id="homeBtn" class="ghost-btn">🏠 All Pages</button>
+    </header>
+
+    <!-- Gallery view -->
+    <main id="gallery" class="gallery"></main>
+
+    <!-- Coloring view -->
+    <main id="painter" class="painter hidden">
+      <aside class="toolbar">
+        <h2 id="pageTitle">Page</h2>
+        <section class="colors" id="palette"></section>
+        <section class="tools">
+          <button id="fillTool" class="tool-btn active" title="Fill">
+            🖌 Fill
+          </button>
+          <button id="eraseTool" class="tool-btn" title="Erase">
+            🧽 Erase
+          </button>
+          <button id="resetBtn" class="tool-btn" title="Reset">♻️ Reset</button>
+          <button id="saveBtn" class="tool-btn" title="Download">
+            💾 Save
+          </button>
+        </section>
+      </aside>
+      <section class="board">
+        <div id="svgHolder" class="svg-holder"></div>
+      </section>
+    </main>
+
+    <div class="bg-blobs" aria-hidden="true">
+      <span class="blob b1"></span><span class="blob b2"></span
+      ><span class="blob b3"></span>
+    </div>
+
+    <script src="pages.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

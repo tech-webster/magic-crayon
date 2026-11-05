@@ -1,0 +1,187 @@
+import type { ColoringPage } from '@/types/coloring';
+
+const INK = '#2D3436';
+
+/**
+ * Hand-authored, geometric coloring pages (age 3-8 friendly).
+ * Every page shares a `0 0 200 200` viewBox. `regions` are fillable shapes;
+ * `outlines` are crisp line-art details (eyes, whiskers, borders) that never fill.
+ */
+export const PAGES: ColoringPage[] = [
+  {
+    id: 'butterfly',
+    title: 'Butterfly',
+    category: 'Animals',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'ellipse', id: 'wingUL', cx: 60, cy: 72, rx: 40, ry: 32 },
+      { shape: 'ellipse', id: 'wingUR', cx: 140, cy: 72, rx: 40, ry: 32 },
+      { shape: 'ellipse', id: 'wingLL', cx: 66, cy: 134, rx: 30, ry: 26 },
+      { shape: 'ellipse', id: 'wingLR', cx: 134, cy: 134, rx: 30, ry: 26 },
+      { shape: 'ellipse', id: 'body', cx: 100, cy: 104, rx: 9, ry: 42 },
+      { shape: 'circle', id: 'head', cx: 100, cy: 58, r: 11 },
+    ],
+    outlines: [
+      { d: 'M95 50 C88 38 80 34 76 30' },
+      { d: 'M105 50 C112 38 120 34 124 30' },
+    ],
+  },
+  {
+    id: 'fish',
+    title: 'Happy Fish',
+    category: 'Animals',
+    difficulty: 1,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'ellipse', id: 'body', cx: 88, cy: 100, rx: 50, ry: 34 },
+      { shape: 'path', id: 'tail', d: 'M135 100 L172 72 L172 128 Z' },
+      { shape: 'path', id: 'topFin', d: 'M78 68 Q92 46 108 68 Z' },
+      { shape: 'path', id: 'bottomFin', d: 'M78 132 Q92 154 108 132 Z' },
+      { shape: 'circle', id: 'eye', cx: 58, cy: 90, r: 6 },
+      { shape: 'circle', id: 'bubble1', cx: 150, cy: 46, r: 7 },
+      { shape: 'circle', id: 'bubble2', cx: 166, cy: 30, r: 5 },
+    ],
+    outlines: [
+      { d: 'M40 104 q6 6 12 2' },
+      { d: 'M96 82 q10 18 0 36' },
+      { d: 'M112 86 q9 14 0 28' },
+    ],
+  },
+  {
+    id: 'turtle',
+    title: 'Turtle',
+    category: 'Animals',
+    difficulty: 3,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'ellipse', id: 'shell', cx: 100, cy: 100, rx: 52, ry: 40 },
+      { shape: 'circle', id: 'head', cx: 158, cy: 96, r: 15 },
+      { shape: 'path', id: 'tail', d: 'M49 108 L30 118 L49 124 Z' },
+      { shape: 'ellipse', id: 'legFL', cx: 74, cy: 138, rx: 15, ry: 11 },
+      { shape: 'ellipse', id: 'legFR', cx: 126, cy: 138, rx: 15, ry: 11 },
+      { shape: 'ellipse', id: 'legBL', cx: 70, cy: 66, rx: 13, ry: 10 },
+      { shape: 'ellipse', id: 'legBR', cx: 130, cy: 66, rx: 13, ry: 10 },
+      { shape: 'circle', id: 'eye', cx: 163, cy: 92, r: 3 },
+    ],
+    outlines: [
+      { d: 'M85 88 h30 l12 12 l-12 12 h-30 l-12 -12 z' },
+      { d: 'M100 60 v28 M100 112 v28 M52 100 h33 M115 100 h33' },
+      { d: 'M165 102 q4 2 8 0' },
+    ],
+  },
+  {
+    id: 'rocket',
+    title: 'Rocket',
+    category: 'Vehicles',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'path', id: 'nose', d: 'M100 22 L128 78 L72 78 Z' },
+      { shape: 'rect', id: 'body', x: 72, y: 76, width: 56, height: 72, rx: 6 },
+      { shape: 'path', id: 'finL', d: 'M72 118 L44 158 L72 158 Z' },
+      { shape: 'path', id: 'finR', d: 'M128 118 L156 158 L128 158 Z' },
+      { shape: 'circle', id: 'window', cx: 100, cy: 104, r: 15 },
+      { shape: 'path', id: 'flame', d: 'M86 150 Q100 188 114 150 Z' },
+    ],
+    outlines: [{ d: 'M84 122 h32 M84 134 h32' }],
+  },
+  {
+    id: 'flower',
+    title: 'Flower',
+    category: 'Nature',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'ellipse', id: 'petalTop', cx: 100, cy: 44, rx: 15, ry: 20 },
+      { shape: 'ellipse', id: 'petalUR', cx: 136, cy: 62, rx: 15, ry: 20 },
+      { shape: 'ellipse', id: 'petalLR', cx: 136, cy: 98, rx: 15, ry: 20 },
+      { shape: 'ellipse', id: 'petalBottom', cx: 100, cy: 116, rx: 15, ry: 20 },
+      { shape: 'ellipse', id: 'petalLL', cx: 64, cy: 98, rx: 15, ry: 20 },
+      { shape: 'ellipse', id: 'petalUL', cx: 64, cy: 62, rx: 15, ry: 20 },
+      { shape: 'circle', id: 'center', cx: 100, cy: 80, r: 18 },
+      { shape: 'rect', id: 'stem', x: 96, y: 122, width: 8, height: 60, rx: 4 },
+      { shape: 'ellipse', id: 'leafL', cx: 74, cy: 158, rx: 20, ry: 11 },
+      { shape: 'ellipse', id: 'leafR', cx: 126, cy: 146, rx: 20, ry: 11 },
+    ],
+    outlines: [{ d: 'M90 80 h20 M100 70 v20' }],
+  },
+  {
+    id: 'house',
+    title: 'Home Sweet Home',
+    category: 'Fun',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'circle', id: 'sun', cx: 166, cy: 40, r: 18 },
+      { shape: 'rect', id: 'chimney', x: 128, y: 52, width: 14, height: 26 },
+      { shape: 'path', id: 'roof', d: 'M40 92 L100 42 L160 92 Z' },
+      { shape: 'rect', id: 'base', x: 52, y: 92, width: 96, height: 76 },
+      { shape: 'rect', id: 'windowL', x: 62, y: 104, width: 20, height: 20 },
+      { shape: 'rect', id: 'windowR', x: 118, y: 104, width: 20, height: 20 },
+      { shape: 'rect', id: 'door', x: 86, y: 122, width: 28, height: 46, rx: 3 },
+      { shape: 'circle', id: 'knob', cx: 108, cy: 146, r: 2.5 },
+    ],
+    outlines: [
+      { d: 'M72 104 v20 M62 114 h20' },
+      { d: 'M128 104 v20 M118 114 h20' },
+      { d: 'M166 14 v-8 M166 74 v-8 M140 40 h-8 M192 40 h-8' },
+    ],
+  },
+  {
+    id: 'icecream',
+    title: 'Ice Cream',
+    category: 'Fun',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'path', id: 'cone', d: 'M78 110 L122 110 L100 178 Z' },
+      { shape: 'circle', id: 'scoopBottom', cx: 100, cy: 96, r: 30 },
+      { shape: 'circle', id: 'scoopTop', cx: 100, cy: 62, r: 24 },
+      { shape: 'circle', id: 'cherry', cx: 100, cy: 34, r: 9 },
+    ],
+    outlines: [
+      { d: 'M82 116 L118 116' },
+      { d: 'M86 120 L114 156 M114 120 L86 156 M100 110 v60' },
+    ],
+  },
+  {
+    id: 'star',
+    title: 'Twinkle Star',
+    category: 'Fun',
+    difficulty: 1,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      {
+        shape: 'path',
+        id: 'star',
+        d: 'M100 30 L118.8 74.2 L166.6 78.4 L130.4 109.9 L141.1 156.6 L100 132 L58.9 156.6 L69.6 109.9 L33.4 78.4 L81.2 74.2 Z',
+      },
+      { shape: 'circle', id: 'eyeL', cx: 84, cy: 96, r: 5 },
+      { shape: 'circle', id: 'eyeR', cx: 116, cy: 96, r: 5 },
+      { shape: 'circle', id: 'cheekL', cx: 76, cy: 112, r: 6 },
+      { shape: 'circle', id: 'cheekR', cx: 124, cy: 112, r: 6 },
+    ],
+    outlines: [{ d: 'M88 114 Q100 126 112 114' }],
+  },
+];
+
+export function getPageById(id: string | undefined): ColoringPage | undefined {
+  return PAGES.find((p) => p.id === id);
+}
