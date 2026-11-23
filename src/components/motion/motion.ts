@@ -1,19 +1,25 @@
-// motion.ts: the motion engine for living illustrations (react-native-reanimated 3/4).
+// motion.ts: the motion engine for living illustrations (core React Native Animated).
 //
 // Everything that moves reads a clock: a looping clock for idle life, a one-shot
 // clock for a scene that tells an action. Values come from keyframe tracks and a
-// few shaping helpers, all worklets, so they run on the UI thread.
-import { useEffect } from 'react';
-import { Easing, cancelAnimation, useSharedValue, withRepeat, withTiming, type SharedValue } from 'react-native-reanimated';
+// few shaping helpers; the clocks are plain React Native Animated values.
+import { useEffect, useMemo } from 'react';
+import { Animated, Easing } from 'react-native';
 
-// ⚠️ Keep curves at the TOP of the module. A worklet captures what it references
-// when it is created; constants declared further down are undefined inside it.
+/** A stable Animated.Value for the component's lifetime (useAnimatedValue has no web export). */
+function useClock(initial: number): Animated.Value {
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- the clock must live for the component's lifetime
+  return useMemo(() => new Animated.Value(initial), []);
+}
+
+// ⚠️ Keep curves at the TOP of the module. Tracks and clocks capture easings as
+// plain JS closures; declaring them first keeps the order obvious and stable.
 /** Things that travel (gaze, sway, a head turning, a lid closing). */
-export const EASE_IN_OUT = Easing.bezierFn(0.77, 0, 0.175, 1);
+export const EASE_IN_OUT = Easing.bezier(0.77, 0, 0.175, 1);
 /** Things that open or arrive (a mouth, a lid reopening, a prop appearing). */
-export const EASE_OUT = Easing.bezierFn(0.23, 1, 0.32, 1);
+export const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);
 /** Only for things leaving or falling away. Never for something the eye is waiting on. */
-export const EASE_IN = Easing.bezierFn(0.55, 0, 1, 0.45);
+export const EASE_IN = Easing.bezier(0.55, 0, 1, 0.45);
 
 /** A keyframe: time (ms), value, and the curve of the segment ARRIVING here ('out', or ease-in-out by default). */
 export type Key = readonly [number, number, 'out'?];
@@ -21,7 +27,6 @@ export type Keys = readonly Key[];
 
 /** The value of a track at time `t`. The last key should equal the first, so loops never jump. */
 export function track(t: number, keys: Keys): number {
-  'worklet';
   if (t <= keys[0][0]) return keys[0][1];
   for (let i = 1; i < keys.length; i++) {
     const k1 = keys[i];
@@ -47,7 +52,6 @@ export type FlowKey = readonly [number, number];
  * (a monotone cubic). Repeat a value to hold, and layer idle life on top of the hold.
  */
 export function flow(t: number, k: readonly FlowKey[]): number {
-  'worklet';
   const n = k.length;
   if (t <= k[0][0]) return k[0][1];
   if (t >= k[n - 1][0]) return k[n - 1][1];
@@ -81,7 +85,6 @@ export function flow(t: number, k: readonly FlowKey[]): number {
 
 /** 0 → 1 inside the window [a, b] of a clock (eased), 0 before it, 1 after. One beat of a scene. */
 export function seg(t: number, a: number, b: number, curve: 'out' | 'inOut' = 'out'): number {
-  'worklet';
   if (t <= a) return 0;
   if (t >= b) return 1;
   const p = (t - a) / (b - a);
@@ -90,43 +93,49 @@ export function seg(t: number, a: number, b: number, curve: 'out' | 'inOut' = 'o
 
 /** A smooth back-and-forth from -1 to 1. `phase` (0 to 1) offsets one item from the next. */
 export function wave(t: number, period: number, phase = 0): number {
-  'worklet';
   return Math.sin((t / period + phase) * Math.PI * 2);
 }
 
 /** Progress through a loop, 0 to 1, with a phase (for drifting or falling items). */
 export function loop(t: number, period: number, phase = 0): number {
-  'worklet';
   const p = (t / period + phase) % 1;
   return p < 0 ? p + 1 : p;
 }
 
 /** 0 at both ends of a loop and 1 in the middle: fade in and out (steam, sparkles, ripples). */
 export function bell(p: number): number {
-  'worklet';
   return Math.sin(Math.PI * Math.min(1, Math.max(0, p)));
 }
 
 /** A stable pseudo-random number in [0, 1) for item `i`: variety that is the same every render. */
 export function seeded(i: number, salt = 0): number {
-  'worklet';
   const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
   return x - Math.floor(x);
+}
+
+function linearTiming(clock: Animated.Value, toMs: number): Animated.CompositeAnimation {
+  return Animated.timing(clock, {
+    toValue: toMs,
+    duration: toMs,
+    easing: Easing.linear,
+    useNativeDriver: false,
+  });
 }
 
 /**
  * A looping clock from 0 to `period` ms. Frozen at 0 when `live` is false
  * (reduced motion, off screen, hidden): frame 0 must be a good drawing.
  */
-export function useLoopClock(period: number, live: boolean): SharedValue<number> {
-  const clock = useSharedValue(0);
+export function useLoopClock(period: number, live: boolean): Animated.Value {
+  const clock = useClock(0);
   useEffect(() => {
-    cancelAnimation(clock);
-    // withRepeat restarts from the CURRENT value: always reset first.
-    clock.value = 0;
+    clock.stopAnimation();
+    // A fresh loop must start from t = 0: always reset first.
+    clock.setValue(0);
     if (!live) return;
-    clock.value = withRepeat(withTiming(period, { duration: period, easing: Easing.linear }), -1);
-    return () => cancelAnimation(clock);
+    const animation = Animated.loop(linearTiming(clock, period));
+    animation.start();
+    return () => animation.stop();
   }, [live, period, clock]);
   return clock;
 }
@@ -137,21 +146,56 @@ export function useLoopClock(period: number, live: boolean): SharedValue<number>
  * With reduced motion it jumps straight to the end: the final frame is the one
  * that carries meaning, so it must read on its own.
  */
-export function useOneShotClock(duration: number, play: boolean, reduced: boolean): SharedValue<number> {
-  const clock = useSharedValue(reduced ? duration : 0);
+export function useOneShotClock(duration: number, play: boolean, reduced: boolean): Animated.Value {
+  const clock = useClock(0);
   useEffect(() => {
-    cancelAnimation(clock);
+    clock.stopAnimation();
     if (!play) {
-      clock.value = 0;
+      clock.setValue(0);
       return;
     }
     if (reduced) {
-      clock.value = duration;
+      clock.setValue(duration);
       return;
     }
-    clock.value = 0;
-    clock.value = withTiming(duration, { duration, easing: Easing.linear });
-    return () => cancelAnimation(clock);
+    clock.setValue(0);
+    const animation = linearTiming(clock, duration);
+    animation.start();
+    return () => animation.stop();
   }, [play, reduced, duration, clock]);
   return clock;
+}
+
+/**
+ * A clock value sampled at fixed times, as an interpolation. Every curve here
+ * is a pure function over one clock period, so motion is expressed as
+ * `clock.interpolate` over precomputed samples instead of per-frame Math.
+ */
+export function trackInterpolation(
+  clock: Animated.Value,
+  period: number,
+  sample: (t: number) => number,
+): Animated.AnimatedInterpolation<number> {
+  const n = Math.min(384, Math.max(32, Math.round(period / 32)));
+  const inputRange = Array.from({ length: n + 1 }, (_, i) => (i / n) * period);
+  return clock.interpolate({
+    inputRange,
+    outputRange: inputRange.map(sample),
+    extrapolate: 'clamp',
+  });
+}
+
+/** Like `trackInterpolation`, for angles: interpolated values carry a 'deg' suffix. */
+export function degreesInterpolation(
+  clock: Animated.Value,
+  period: number,
+  sample: (t: number) => number,
+): Animated.AnimatedInterpolation<string> {
+  const n = Math.min(384, Math.max(32, Math.round(period / 32)));
+  const inputRange = Array.from({ length: n + 1 }, (_, i) => (i / n) * period);
+  return clock.interpolate({
+    inputRange,
+    outputRange: inputRange.map((t) => `${sample(t).toFixed(2)}deg`),
+    extrapolate: 'clamp',
+  });
 }

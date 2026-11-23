@@ -1,16 +1,17 @@
 {
   "expo": {
-    "name": "ColorJoy Kids",
-    "slug": "colorjoy-kids",
+    "name": "MagicCrayon",
+    "slug": "magic-crayon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "colorjoykids",
+    "scheme": "magiccrayon",
     "userInterfaceStyle": "light",
     "ios": {
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.techwebster.MagicCrayon",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -37,10 +38,11 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow ColorJoy Kids to save your artwork to your device.",
-          "savePhotosPermission": "Allow ColorJoy Kids to save your coloring masterpieces."
+          "photosPermission": "Allow MagicCrayon to save your artwork to your device.",
+          "savePhotosPermission": "Allow MagicCrayon to save your coloring masterpieces."
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -1,4 +1,5 @@
 import type { ColoringPage } from '@/types/coloring';
+import { GENERATED_PAGES } from './generatedPages';
 
 const INK = '#2D3436';
 
@@ -180,8 +181,94 @@ export const PAGES: ColoringPage[] = [
     ],
     outlines: [{ d: 'M88 114 Q100 126 112 114' }],
   },
+  // ---- Mandala pages ----
+  {
+    id: 'mandala1',
+    title: 'Mandala Bloom',
+    category: 'Fun',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 2,
+    regions: [
+      { shape: 'circle', id: 'center', cx: 100, cy: 100, r: 18 },
+      { shape: 'circle', id: 'inner1', cx: 128, cy: 100, r: 14 },
+      { shape: 'circle', id: 'inner2', cx: 114, cy: 124, r: 14 },
+      { shape: 'circle', id: 'inner3', cx: 86, cy: 124, r: 14 },
+      { shape: 'circle', id: 'inner4', cx: 72, cy: 100, r: 14 },
+      { shape: 'circle', id: 'inner5', cx: 86, cy: 76, r: 14 },
+      { shape: 'circle', id: 'inner6', cx: 114, cy: 76, r: 14 },
+      { shape: 'circle', id: 'outer1', cx: 156, cy: 100, r: 16 },
+      { shape: 'circle', id: 'outer2', cx: 140, cy: 138, r: 16 },
+      { shape: 'circle', id: 'outer3', cx: 100, cy: 156, r: 16 },
+      { shape: 'circle', id: 'outer4', cx: 60, cy: 138, r: 16 },
+      { shape: 'circle', id: 'outer5', cx: 44, cy: 100, r: 16 },
+      { shape: 'circle', id: 'outer6', cx: 60, cy: 62, r: 16 },
+      { shape: 'circle', id: 'outer7', cx: 100, cy: 44, r: 16 },
+      { shape: 'circle', id: 'outer8', cx: 140, cy: 62, r: 16 },
+    ],
+  },
+  {
+    id: 'mandala2',
+    title: 'Mandala Star',
+    category: 'Fun',
+    difficulty: 3,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 2,
+    regions: [
+      { shape: 'circle', id: 'c', cx: 100, cy: 100, r: 12 },
+      { shape: 'ellipse', id: 'p1', cx: 100, cy: 60, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p2', cx: 136, cy: 72, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p3', cx: 152, cy: 108, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p4', cx: 124, cy: 138, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p5', cx: 88, cy: 148, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p6', cx: 56, cy: 124, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p7', cx: 48, cy: 88, rx: 14, ry: 26 },
+      { shape: 'ellipse', id: 'p8', cx: 76, cy: 60, rx: 14, ry: 26 },
+    ],
+  },
+  // ---- Seasonal pages ----
+  {
+    id: 'pumpkin',
+    title: 'Pumpkin',
+    category: 'Nature',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'ellipse', id: 'body', cx: 100, cy: 118, rx: 58, ry: 46 },
+      { shape: 'rect', id: 'stem', x: 92, y: 58, width: 16, height: 24, rx: 4 },
+      { shape: 'ellipse', id: 'leaf', cx: 124, cy: 66, rx: 18, ry: 9 },
+      { shape: 'circle', id: 'eyeL', cx: 78, cy: 108, r: 7 },
+      { shape: 'circle', id: 'eyeR', cx: 122, cy: 108, r: 7 },
+      { shape: 'ellipse', id: 'mouth', cx: 100, cy: 138, rx: 22, ry: 8 },
+    ],
+  },
+  {
+    id: 'snowman',
+    title: 'Snowman',
+    category: 'Fun',
+    difficulty: 2,
+    viewBox: '0 0 200 200',
+    stroke: INK,
+    strokeWidth: 3,
+    regions: [
+      { shape: 'circle', id: 'bottom', cx: 100, cy: 150, r: 42 },
+      { shape: 'circle', id: 'middle', cx: 100, cy: 95, r: 30 },
+      { shape: 'circle', id: 'head', cx: 100, cy: 48, r: 22 },
+      { shape: 'rect', id: 'hat', x: 78, y: 18, width: 44, height: 18, rx: 4 },
+      { shape: 'rect', id: 'hatBrim', x: 70, y: 34, width: 60, height: 8, rx: 4 },
+      { shape: 'circle', id: 'eyeL', cx: 90, cy: 44, r: 3 },
+      { shape: 'circle', id: 'eyeR', cx: 110, cy: 44, r: 3 },
+      { shape: 'circle', id: 'btn1', cx: 100, cy: 90, r: 4 },
+      { shape: 'circle', id: 'btn2', cx: 100, cy: 105, r: 4 },
+    ],
+    outlines: [{ d: 'M96 52 L104 52 L100 60 Z' }],
+  },
+  ...GENERATED_PAGES,
 ];
-
 export function getPageById(id: string | undefined): ColoringPage | undefined {
   return PAGES.find((p) => p.id === id);
 }

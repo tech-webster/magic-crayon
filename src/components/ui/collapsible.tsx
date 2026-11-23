@@ -1,12 +1,25 @@
 import { SymbolView } from 'expo-symbols';
-import { PropsWithChildren, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { Animated, Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+
+function FadeInOnMount({ children, duration = 200 }: PropsWithChildren & { duration?: number }) {
+  const opacity = useMemo(() => new Animated.Value(0), []);
+  useEffect(() => {
+    const animation = Animated.timing(opacity, {
+      toValue: 1,
+      duration,
+      useNativeDriver: false,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [duration, opacity]);
+  return <Animated.View style={{ opacity }}>{children}</Animated.View>;
+}
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,11 +43,11 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
         <ThemedText type="small">{title}</ThemedText>
       </Pressable>
       {isOpen && (
-        <Animated.View entering={FadeIn.duration(200)}>
+        <FadeInOnMount>
           <ThemedView type="backgroundElement" style={styles.content}>
             {children}
           </ThemedView>
-        </Animated.View>
+        </FadeInOnMount>
       )}
     </ThemedView>
   );

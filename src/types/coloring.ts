@@ -1,4 +1,16 @@
-export type PageCategory = 'Animals' | 'Vehicles' | 'Nature' | 'Fun';
+export type PageCategory =
+  | 'Animals'
+  | 'Vehicles'
+  | 'Nature'
+  | 'Fun'
+  | 'Flowers'
+  | 'Birds'
+  | 'Fruits'
+  | 'Vegetables'
+  | 'Sea Creatures'
+  | 'Cartoon'
+  | 'Festivals'
+  | 'Space';
 
 export type Region =
   | { shape: 'circle'; id: string; cx: number; cy: number; r: number }

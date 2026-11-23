@@ -1,0 +1,63 @@
+diff --git a/node_modules/react-native-svg/lib/commonjs/web/utils/prepare.js b/node_modules/react-native-svg/lib/commonjs/web/utils/prepare.js
+index 00f1f60..ffcdd8a 100644
+--- a/node_modules/react-native-svg/lib/commonjs/web/utils/prepare.js
++++ b/node_modules/react-native-svg/lib/commonjs/web/utils/prepare.js
+@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
+ });
+ exports.prepare = void 0;
+ var _hasProperty = require("./hasProperty");
++var react_native_1 = require("react-native");
+ var _parseTransform = require("./parseTransform");
+ var _resolve = require("../../lib/resolve");
+ var _resolveAssetUri = require("../../lib/resolveAssetUri");
+@@ -35,7 +36,7 @@ const prepare = (self, props = self.props) => {
+     ...rest
+   } = props;
+   const clean = {
+-    ...((0, _hasProperty.hasTouchableProperty)(props) ? {
++    ...((0, _hasProperty.hasTouchableProperty)(props) && react_native_1.Platform.OS !== 'web' ? {
+       onStartShouldSetResponder: self.touchableHandleStartShouldSetResponder,
+       onResponderTerminationRequest: self.touchableHandleResponderTerminationRequest,
+       onResponderGrant: self.touchableHandleResponderGrant,
+diff --git a/node_modules/react-native-svg/lib/module/web/utils/prepare.js b/node_modules/react-native-svg/lib/module/web/utils/prepare.js
+index 41289b6..5f1613d 100644
+--- a/node_modules/react-native-svg/lib/module/web/utils/prepare.js
++++ b/node_modules/react-native-svg/lib/module/web/utils/prepare.js
+@@ -1,4 +1,5 @@
+ import { hasTouchableProperty } from './hasProperty';
++import { Platform } from 'react-native';
+ import { parseTransformProp } from './parseTransform';
+ import { resolve } from '../../lib/resolve';
+ import { resolveAssetUri } from '../../lib/resolveAssetUri';
+@@ -29,7 +30,7 @@ export const prepare = (self, props = self.props) => {
+     ...rest
+   } = props;
+   const clean = {
+-    ...(hasTouchableProperty(props) ? {
++    ...(hasTouchableProperty(props) && Platform.OS !== 'web' ? {
+       onStartShouldSetResponder: self.touchableHandleStartShouldSetResponder,
+       onResponderTerminationRequest: self.touchableHandleResponderTerminationRequest,
+       onResponderGrant: self.touchableHandleResponderGrant,
+diff --git a/node_modules/react-native-svg/src/web/utils/prepare.ts b/node_modules/react-native-svg/src/web/utils/prepare.ts
+index 4106784..29c528a 100644
+--- a/node_modules/react-native-svg/src/web/utils/prepare.ts
++++ b/node_modules/react-native-svg/src/web/utils/prepare.ts
+@@ -1,5 +1,6 @@
+ import {
+   GestureResponderEvent,
++  Platform,
+   type ImageProps as RNImageProps,
+ } from 'react-native';
+ import { BaseProps } from '../types';
+@@ -55,7 +56,10 @@ export const prepare = <T extends BaseProps>(
+     style?: object;
+     ref?: unknown;
+   } = {
+-    ...(hasTouchableProperty(props)
++    // React DOM drops these responder props on web ("Unknown event handler
++    // property"), so only pass them on native; `onPress` is mapped to
++    // `onClick` below regardless. See software-mansion/react-native-svg#3088.
++    ...(hasTouchableProperty(props) && Platform.OS !== 'web'
+       ? {
+           onStartShouldSetResponder:
+             self.touchableHandleStartShouldSetResponder,

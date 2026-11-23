@@ -44,3 +44,9 @@ example
 
 # agent-skill junction (created by skills CLI; .agents and skills-lock.json are committed)
 .claude/
+
+# Expo web export
+.expo-web-export/
+
+# opencode logs
+opencode*.log
